@@ -1,10 +1,10 @@
-import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
+import { Text, View, TouchableOpacity, SafeAreaView } from "react-native";
 import { useRouter } from "expo-router";
 import AuthForm from "@/components/AuthForm";
 import DarkDialogueLogo from "@/assets/images/allDarkDialogueLogo.svg";
-import LogInImage from "@/assets/images/chatting.svg";
+import SignUpImage from "@/assets/images/messaging.svg";
 
-export default function Login() {
+export default function Signup() {
   const router = useRouter();
 
   return (
@@ -28,10 +28,10 @@ export default function Login() {
         }}
       >
         <DarkDialogueLogo width={150} height={100} />
-        <LogInImage width={250} height={150} />
+        <SignUpImage width={250} height={150} />
       </View>
       <AuthForm
-        title="Login"
+        title="Signup"
         onSubmit={() => {}}
         width={"100%"}
         height={"60%"}
@@ -42,7 +42,7 @@ export default function Login() {
           height: "10%",
         }}
         onPress={() => {
-          router.navigate("/signup");
+          router.navigate("/");
         }}
       >
         <Text
@@ -55,7 +55,7 @@ export default function Login() {
             fontSize: 15,
           }}
         >
-          sign up instead
+          log in instead
         </Text>
       </TouchableOpacity>
     </SafeAreaView>
