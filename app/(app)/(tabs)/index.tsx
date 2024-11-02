@@ -3,10 +3,15 @@ import { useRouter } from "expo-router";
 import AuthForm from "@/components/AuthForm";
 import DarkDialogueLogo from "@/assets/images/allDarkDialogueLogo.svg";
 import LogInImage from "@/assets/images/chatting.svg";
+import { LoginFormData, useLoginMutation } from "@/store/api/slice";
 
 export default function Login() {
   const router = useRouter();
+  const [login] = useLoginMutation();
 
+  const submitLoginForm = (formData: LoginFormData) => {
+    login(formData);
+  };
   return (
     <SafeAreaView
       style={{
@@ -32,7 +37,7 @@ export default function Login() {
       </View>
       <AuthForm
         title="Login"
-        onSubmit={() => {}}
+        onSubmit={submitLoginForm}
         width={"100%"}
         height={"60%"}
       />

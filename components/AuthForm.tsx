@@ -1,4 +1,4 @@
-import { useRouter } from "expo-router";
+import { LoginFormData } from "@/store/api/slice";
 import { useState } from "react";
 import {
   Text,
@@ -15,11 +15,10 @@ export default function AuthForm({
   height,
 }: {
   title: string;
-  onSubmit: () => void;
+  onSubmit: (data: LoginFormData) => void;
   width: DimensionValue;
   height: DimensionValue | null;
 }) {
-  const router = useRouter();
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
@@ -58,7 +57,9 @@ export default function AuthForm({
         placeholderTextColor="grey"
         keyboardType="ascii-capable"
         value={username}
-        onChangeText={setUsername}
+        onChangeText={(value: string) => {
+          setUsername(value.toLowerCase());
+        }}
       />
 
       <TextInput
@@ -88,7 +89,7 @@ export default function AuthForm({
           borderRadius: 5,
         }}
         onPress={() => {
-          onSubmit();
+          onSubmit({ username, password });
         }}
       >
         <Text
