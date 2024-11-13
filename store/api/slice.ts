@@ -1,6 +1,7 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { deleteItemAsync, getItem, setItemAsync } from "expo-secure-store";
+import createBaseQueryWithReauth from "./fetchBaseQueryWithReAuth";
 import { setLoggedIn } from "../auth/slice";
-import { deleteItemAsync, getItemAsync, setItemAsync } from "expo-secure-store";
 
 export interface LoginFormData {
   username: string;
@@ -23,11 +24,11 @@ export interface IProfileData {
 
 export const apiSlice = createApi({
   reducerPath: "api",
-  tagTypes: ["profile", "Conversation", "Settings"],
-  baseQuery: fetchBaseQuery({
-    baseUrl: "http://192.168.20.3:3000",
-    prepareHeaders: (headers, api) => {
-      const token = getItemAsync("accessToken");
+  tagTypes: ["session", "profile", "Conversation", "Settings"],
+  baseQuery: createBaseQueryWithReauth({
+    baseUrl: "<local_ip:expo_port>",
+    prepareHeaders(headers, api) {
+      const token = getItem("accessToken");
       if (token) {
         headers.set("authorization", `Bearer ${token}`);
       }
@@ -55,9 +56,26 @@ export const apiSlice = createApi({
       },
       invalidatesTags: [{ type: "profile", id: "MyProfile" }],
     }),
+    logout: builder.mutation<void, { refreshToken: string }>({
+      query: (data) => ({
+        url: `/logout`,
+        method: "POST",
+        data,
+      }),
+      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+        try {
+          await queryFulfilled;
+          await deleteItemAsync("accessToken");
+          await deleteItemAsync("refreshToken");
+        } catch (err) {
+          console.error("Failed to logout", err);
+        }
+      },
+      invalidatesTags: [{ type: "profile", id: "MyProfile" }],
+    }),
     getMyProfile: builder.query<IProfileData, void>({
       query: () => {
-        return `/profile`;
+        return { url: `/profile` };
       },
       providesTags: (result, error) => {
         return [{ type: "profile", id: "MyProfile" }];
@@ -66,4 +84,5 @@ export const apiSlice = createApi({
   }),
 });
 
-export const { useLoginMutation, useGetMyProfileQuery } = apiSlice;
+export const { useLoginMutation, useGetMyProfileQuery, useLogoutMutation } =
+  apiSlice;

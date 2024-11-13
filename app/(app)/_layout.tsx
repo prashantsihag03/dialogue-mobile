@@ -1,28 +1,14 @@
 import { Stack } from "expo-router";
 import "react-native-reanimated";
-import { SafeAreaView, Text } from "react-native";
-import { useAppSelector } from "@/store/hooks";
-import { getLoggedIn } from "@/store/auth/selectors";
-import { useGetMyProfileQuery } from "@/store/api/slice";
-import { useEffect } from "react";
+import { Button, SafeAreaView, Text } from "react-native";
+import { useGetMyProfileQuery, useLogoutMutation } from "@/store/api/slice";
+import { getItemAsync } from "expo-secure-store";
 
 export default function AppLayout() {
-  const login = useAppSelector(getLoggedIn);
-  const {
-    data: myProfile,
-    isFetching,
-    isError,
-    isSuccess,
-  } = useGetMyProfileQuery();
+  const { isFetching, isError, isSuccess, error, refetch } =
+    useGetMyProfileQuery();
 
-  useEffect(() => {
-    console.log(
-      "profile request sent again and response is: ",
-      isFetching,
-      isError,
-      isSuccess
-    );
-  }, [isFetching, isError, isSuccess]);
+  const [logout] = useLogoutMutation();
 
   if (isFetching) {
     return (
@@ -64,6 +50,19 @@ export default function AppLayout() {
           }}
         >
           <Text>Hello. You are logged In.</Text>
+          <Button
+            title="Logout"
+            onPress={async () => {
+              const refreshToken = await getItemAsync("refreshToken");
+              if (refreshToken) logout({ refreshToken });
+            }}
+          />
+          <Button
+            title="Refresh Profile"
+            onPress={() => {
+              refetch();
+            }}
+          />
         </SafeAreaView>
       </SafeAreaView>
     );
