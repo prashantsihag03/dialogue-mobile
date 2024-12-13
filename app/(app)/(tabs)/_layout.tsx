@@ -1,46 +1,63 @@
-import { Tabs } from "expo-router";
+import { Stack } from "expo-router";
 import React from "react";
-
-import { TabBarIcon } from "@/components/navigation/TabBarIcon";
-import { Colors } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
+import TabBarHeader from "@/components/navigation/TabBarHeader";
+import { useAppSelector } from "@/store/hooks";
+import {
+  getActiveConversationDisplayName,
+  getActiveConversationName,
+} from "@/store/conversation/selectors";
+import ProfilePicture from "@/components/profile/ProfilePicture";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const activeConversationDisplayName = useAppSelector(
+    getActiveConversationDisplayName
+  );
+  const activeConversationName = useAppSelector(getActiveConversationName);
 
   return (
-    <Tabs
+    <Stack
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        headerShown: false,
+        headerTransparent: false,
       }}
       initialRouteName="index"
-      tabBar={() => null}
     >
-      <Tabs.Screen
+      <Stack.Screen
         name="index"
         options={{
-          title: "Login",
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "home" : "home-outline"}
-              color={color}
-            />
+          title: "Conversations",
+          headerShown: true,
+          header: (props) => (
+            <TabBarHeader title={props.options.title} showMenuIcon={true} />
           ),
         }}
       />
-      <Tabs.Screen
-        name="signup"
+      <Stack.Screen
+        name="ConversationView"
         options={{
-          title: "Signup",
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "code-slash" : "code-slash-outline"}
-              color={color}
+          title: activeConversationDisplayName
+            ? activeConversationDisplayName
+            : "Conversation",
+          headerShown: true,
+          header: (props) => (
+            <TabBarHeader
+              title={props.options.title}
+              justify="flex-start"
+              titleImg={
+                activeConversationName ? (
+                  <ProfilePicture
+                    id={activeConversationName}
+                    onPress={() => {
+                      console.log(
+                        "Attempt to open user profile from conversation. Feature not available yet!"
+                      );
+                    }}
+                  />
+                ) : undefined
+              }
             />
           ),
         }}
       />
-    </Tabs>
+    </Stack>
   );
 }

@@ -1,14 +1,11 @@
 import { Stack } from "expo-router";
 import "react-native-reanimated";
-import { Button, SafeAreaView, Text } from "react-native";
-import { useGetMyProfileQuery, useLogoutMutation } from "@/store/api/slice";
-import { getItemAsync } from "expo-secure-store";
+import { SafeAreaView, Text, View } from "react-native";
+import { useGetMyProfileQuery } from "@/store/api/slice";
+import Auth from "../../components/auth";
 
 export default function AppLayout() {
-  const { isFetching, isError, isSuccess, error, refetch } =
-    useGetMyProfileQuery();
-
-  const [logout] = useLogoutMutation();
+  const { isFetching, isError, isSuccess } = useGetMyProfileQuery();
 
   if (isFetching) {
     return (
@@ -29,42 +26,61 @@ export default function AppLayout() {
   }
 
   if (isError) {
-    return (
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    );
+    return <Auth />;
   }
 
   if (isSuccess) {
     return (
-      <SafeAreaView>
-        <SafeAreaView
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            width: "100%",
-            height: "100%",
+      <Stack>
+        <Stack.Screen
+          name="(tabs)"
+          options={{
+            title: "Conversations",
+            headerShown: false,
           }}
-        >
-          <Text>Hello. You are logged In.</Text>
-          <Button
-            title="Logout"
-            onPress={async () => {
-              const refreshToken = await getItemAsync("refreshToken");
-              if (refreshToken) logout({ refreshToken });
-            }}
-          />
-          <Button
-            title="Refresh Profile"
-            onPress={() => {
-              refetch();
-            }}
-          />
-        </SafeAreaView>
-      </SafeAreaView>
+        />
+        <Stack.Screen
+          name="menu"
+          options={{
+            title: "Menu",
+            headerShown: true,
+            headerBackground: () => (
+              <View style={{ backgroundColor: "transparent" }}></View>
+            ),
+          }}
+        />
+        <Stack.Screen
+          name="profile"
+          options={{
+            title: "Profile",
+            headerShown: true,
+            headerBackground: () => (
+              <View style={{ backgroundColor: "transparent" }}></View>
+            ),
+          }}
+        />
+        <Stack.Screen
+          name="settings"
+          options={{
+            title: "Settings",
+            headerShown: true,
+            headerBackground: () => (
+              <View style={{ backgroundColor: "transparent" }}></View>
+            ),
+          }}
+        />
+        <Stack.Screen
+          name="security"
+          options={{
+            title: "Security",
+            headerShown: true,
+            headerBackground: () => (
+              <View style={{ backgroundColor: "transparent" }}></View>
+            ),
+          }}
+        />
+        <Stack.Screen name="+not-found" />
+      </Stack>
     );
   }
 

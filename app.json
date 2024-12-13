@@ -7,11 +7,7 @@
     "icon": "./assets/images/dialogue-icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
-    "splash": {
-      "image": "./assets/images/dialogue-splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
+    "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
       "config": {
@@ -36,7 +32,21 @@
         {
           "faceIDPermission": "Allow Dialogue to access your Face ID biometric data."
         }
-      ]
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#ffffff",
+          "image": "./assets/images/allDarkDialogueLogo.png",
+          "dark": {
+            "image": "./assets/images/allLightDialogueLogo.png",
+            "backgroundColor": "#000000"
+          },
+          "imageWidth": 200,
+          "enableFullScreenImage_legacy": false
+        }
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true
