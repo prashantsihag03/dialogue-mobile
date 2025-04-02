@@ -8,6 +8,7 @@ import MenuItem from "@/components/menu/MenuItem/MenuItem";
 import { getItemAsync } from "expo-secure-store";
 import { useRouter } from "expo-router";
 import { Colors } from "@/constants/Colors";
+import React from "react";
 
 export default function Menu() {
   const router = useRouter();

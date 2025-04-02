@@ -7,6 +7,7 @@ import StackedView from "@/components/common/StackedView/StackedView";
 import { useRef } from "react";
 import QuickView from "@/components/Conversation/QuickView";
 import { Colors } from "@/constants/Colors";
+import React from "react";
 
 export default function Conversations() {
   const colorScheme = useColorScheme();

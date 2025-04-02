@@ -3,6 +3,7 @@ import "react-native-reanimated";
 import { SafeAreaView, Text, View } from "react-native";
 import { useGetMyProfileQuery } from "@/store/api/slice";
 import Auth from "../../components/auth";
+import React from "react";
 
 export default function AppLayout() {
   const { isFetching, isError, isSuccess } = useGetMyProfileQuery();

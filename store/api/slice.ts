@@ -64,7 +64,7 @@ export const apiSlice = createApi({
   reducerPath: "api",
   tagTypes: ["session", "profile", "Conversation", "Settings"],
   baseQuery: createBaseQueryWithReauth({
-    baseUrl: "http://192.168.0.42:3000",
+    baseUrl: process.env.EXPO_PUBLIC_API_BASE_URL,
     prepareHeaders(headers, api) {
       const token = getItem("accessToken");
       if (token) {
